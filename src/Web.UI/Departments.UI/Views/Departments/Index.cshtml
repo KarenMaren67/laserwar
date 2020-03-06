@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Html
+@model List<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel>
+
+@functions{
+    private IHtmlContent DisplayItem(List<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel> departments)
+    {
+        Func<List<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel>, IHtmlContent> getTreeElements =
+    @<ul>
+        @foreach (var treeElement in @item)
+        {
+            if (treeElement.ChildDepartments.Any())
+            {
+                <li class="cl">
+                    <div>
+                        <p>
+                            <a href="#" class="sc" onclick="return UnHide(this)">&#9658;</a>
+                            <a asp-action="Details" asp-route-id="@treeElement.Id">@treeElement.Name</a>
+                        </p>
+                    </div>
+                    @DisplayItem(treeElement.ChildDepartments)
+                </li>
+            }
+            else
+            {
+                <li>
+                    <div>
+                        <p>
+                            <a id="@treeElement.Id" onclick="ChangeDepartment(this)">@treeElement.Name</a>
+                        </p>
+                    </div>
+                </li>
+            }
+        }
+    </ul>;
+
+return getTreeElements(departments);
+}
+
+}
+
+@{
+    ViewData["Title"] = "Departments";
+}
+
+<div class="row">
+    <div class="treeview col-lg-2">
+        @DisplayItem(Model);
+    </div>
+
+    <div class="col-lg-10"></div>
+</div>
+

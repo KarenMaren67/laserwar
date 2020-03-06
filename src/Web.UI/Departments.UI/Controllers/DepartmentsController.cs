@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Services;
+using Application.Validation.Department;
+using Departments.UI.Models.Departments;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +12,41 @@ namespace Departments.UI.Controllers
 {
     public class DepartmentsController : Controller
     {
+        private readonly IService<Department> _departmentsService;
+
+        public DepartmentsController(IService<Department> departmentsService)
+        {
+            _departmentsService = departmentsService;
+        }
+
         // GET: Departments
         public ActionResult Index()
         {
-            return View();
+            var parentDepartments = _departmentsService.GetAllWhere(x => !x.ParentDepartmentId.HasValue);
+            var model = new List<DepartmentsTreeItemViewModel>();
+
+            foreach (var dept in parentDepartments.Where(x => !x.ParentDepartmentId.HasValue))
+            {
+                model.Add(new DepartmentsTreeItemViewModel(dept.Id.Value, dept.Name, GetChildsRecoursive(dept.Id.Value))); 
+            }
+
+            return View(model);
+
+            //Метод рекурсивного заполнения родительских элементов дерева потомками
+            List<DepartmentsTreeItemViewModel> GetChildsRecoursive(int id)
+            {
+                var childDepartments = _departmentsService.GetAllWhere(x => x.ParentDepartmentId == id);
+                var result = new List<DepartmentsTreeItemViewModel>();
+                if (childDepartments != null)
+                {
+                    foreach (var dept in childDepartments)
+                    {
+                        result.Add(new DepartmentsTreeItemViewModel(dept.Id.Value, dept.Name, GetChildsRecoursive(dept.Id.Value)));
+                    }
+                }
+
+                return result;
+            }
         }
 
         // GET: Departments/Details/5

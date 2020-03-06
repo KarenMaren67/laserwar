@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNet.WebHelpers" Version="3.2.7" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.2" />
   </ItemGroup>
@@ -16,8 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Departments\" />
-    <Folder Include="Models\Employees\" />
     <Folder Include="wwwroot\js\Departments\" />
   </ItemGroup>
 
