@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Services;
+using Application.Validation.Emplyee;
+using AutoMapper;
+using Departments.UI.Models.Employees;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +13,14 @@ namespace Departments.UI.Controllers
 {
     public class EmployeesController : Controller
     {
+        private readonly IService<Employee> _employeeService;
+        private readonly IMapper _mapper;
+        public EmployeesController(IService<Employee> employeeService, IMapper mapper)
+        {
+            _employeeService = employeeService;
+            _mapper = mapper;
+        }
+
         // GET: Employee
         public ActionResult Index()
         {
@@ -22,25 +34,26 @@ namespace Departments.UI.Controllers
         }
 
         // GET: Employee/Create
-        public ActionResult Create()
+        public ActionResult Create(int parentDepartmentId)
         {
-            return View();
+           var viewModel = new AddEmployeeViewModel(parentDepartmentId);
+            return View("_AddEmployee",viewModel);
         }
 
         // POST: Employee/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(AddEmployeeViewModel addViewModel)
         {
             try
             {
-                // TODO: Add insert logic here
+                _employeeService.Add(_mapper.Map<Employee>(addViewModel));
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Departments");
             }
             catch
             {
-                return View();
+                return PartialView("_AddEmployee", addViewModel);
             }
         }
 

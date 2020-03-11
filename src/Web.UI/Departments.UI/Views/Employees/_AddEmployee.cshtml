@@ -1,7 +1,24 @@
-﻿
+﻿@model Departments.UI.Models.Employees.AddEmployeeViewModel
+
 @{
     ViewData["Title"] = "AddEmployeeView";
 }
 
-<h1>AddEmployeeView</h1>
+<h2>Create new employee</h2>
+<form asp-controller="Employees" asp-action="Create" method="post">
+    <div class="item">
+        <label for="userName">Name:</label>
+        <input id="userName" value="@Model.Name" />
+    </div>
+    <div class="item">
+        <label>Position:</label>
+        <input id="Position" value="@Model.Position" />
+    </div>
+    <div class="item">
+        <label>Phone:</label>
+        <input id="Phone" value="@Model.Phone" />
+    </div>
+    <button type="submit">Add</button>
+    <button asp-controller="Departments" asp-action="Details" asp-route-id="@Model.ParentDepartmentId">Add</button>
+</form>
 

@@ -2,6 +2,11 @@
 {
     public class AddEmployeeViewModel
     {
+        public AddEmployeeViewModel(int parentDepartmentId)
+        {
+            ParentDepartmentId = parentDepartmentId;
+        }
+
         /// <summary>
         /// Ф.И.О.
         /// </summary>
