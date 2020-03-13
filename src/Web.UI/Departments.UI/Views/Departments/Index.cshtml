@@ -1,19 +1,22 @@
 ﻿@using Microsoft.AspNetCore.Html
-@model List<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel>
+@model IEnumerable<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel>
 
 @functions{
-    private IHtmlContent DisplayItem(List<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel> departments)
+    private IHtmlContent DisplayItem(IEnumerable<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel> departments)
     {
-        Func<List<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel>, IHtmlContent> getTreeElements =
+        Func<IEnumerable<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel>, IHtmlContent> getTreeElements =
     @<ul>
         @foreach (var treeElement in @item)
         {
             if (treeElement.ChildDepartments.Any())
             {
-                <li class="cl">
+                <li class="@(treeElement.ChildDepartments.Any(x=>x.IsSelected) ? "" : "cl" )">
                     <div>
                         <p>
-                            <a href="#" class="sc" onclick="return UnHide(this)">&#9658;</a>
+                            <a href="#" class="sc" onclick="return UnHide(this)">
+                                @(treeElement.ChildDepartments.Any(x => x.IsSelected) ? System.Net.WebUtility.HtmlEncode("\u25BC") : System.Net.WebUtility.HtmlEncode("\u25BA"))
+                            </a>
+
                             <a asp-action="Details" asp-route-id="@treeElement.Id">@treeElement.Name</a>
                         </p>
                     </div>
@@ -25,15 +28,16 @@
                 <li>
                     <div>
                         <p>
-                            <a id="@treeElement.Id" onclick="ChangeDepartment(this)">@treeElement.Name</a>
+                            <a asp-action="Details" asp-route-id="@treeElement.Id">@treeElement.Name</a>
                         </p>
                     </div>
                 </li>
             }
+
         }
     </ul>;
 
-return getTreeElements(departments);
+   return getTreeElements(departments);
 }
 
 }
@@ -44,7 +48,7 @@ return getTreeElements(departments);
 
 <div class="row">
     <div class="treeview col-lg-2">
-        @DisplayItem(Model);
+        @DisplayItem(Model)
     </div>
 
     <div class="col-lg-10"></div>
