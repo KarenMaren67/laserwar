@@ -22,37 +22,59 @@ namespace Departments.UI.Controllers
         // GET: Departments
         public ActionResult Index()
         {
-            var parentDepartments = _departmentsService.GetAllWhere(x => !x.ParentDepartmentId.HasValue);
-            var model = new List<DepartmentsTreeItemViewModel>();
+            return View(BuildTree());
+        }
 
-            foreach (var dept in parentDepartments.Where(x => !x.ParentDepartmentId.HasValue))
+        private IEnumerable<DepartmentsTreeItemViewModel> BuildTree(int? selectedId = null)
+        {
+            var rootDepartments = _departmentsService.GetAllWhere(x => !x.ParentDepartmentId.HasValue);
+
+            foreach (var rootDept in rootDepartments)
             {
-                model.Add(new DepartmentsTreeItemViewModel(dept.Id.Value, dept.Name, GetChildsRecoursive(dept.Id.Value))); 
+                var rootDeptVM = new DepartmentsTreeItemViewModel(rootDept.Id.Value, rootDept.Name, null, null, selectedId.HasValue && rootDept.Id.Value == selectedId.Value);
+                rootDeptVM.ChildDepartments = GetChildsRecoursive(rootDeptVM).ToList();
+                yield return rootDeptVM;
             }
-
-            return View(model);
 
             //Метод рекурсивного заполнения родительских элементов дерева потомками
-            List<DepartmentsTreeItemViewModel> GetChildsRecoursive(int id)
+            IEnumerable<DepartmentsTreeItemViewModel> GetChildsRecoursive(DepartmentsTreeItemViewModel parentVM)
             {
-                var childDepartments = _departmentsService.GetAllWhere(x => x.ParentDepartmentId == id);
-                var result = new List<DepartmentsTreeItemViewModel>();
-                if (childDepartments != null)
+                var childDepartments = _departmentsService.GetAllWhere(x => x.ParentDepartmentId == parentVM.Id);
+                foreach (var child in childDepartments)
                 {
-                    foreach (var dept in childDepartments)
-                    {
-                        result.Add(new DepartmentsTreeItemViewModel(dept.Id.Value, dept.Name, GetChildsRecoursive(dept.Id.Value)));
-                    }
-                }
+                    var childDeptVM = new DepartmentsTreeItemViewModel(
+                        child.Id.Value,
+                        child.Name,
+                        null,
+                        parentVM,
+                        selectedId.HasValue && child.Id.Value == selectedId.Value);
 
-                return result;
+                    childDeptVM.ChildDepartments = GetChildsRecoursive(childDeptVM).ToList();
+
+                    if (selectedId.HasValue && childDeptVM.Id == selectedId.Value)
+                    {
+                        setSelectedRecursive(childDeptVM);
+                    }
+
+                    yield return childDeptVM;
+                }
             }
         }
+
+        private void setSelectedRecursive(DepartmentsTreeItemViewModel dept)
+        {
+            if (dept != null)
+            {
+                dept.IsSelected = true;
+                setSelectedRecursive(dept.Parent);
+            }
+        }
+
 
         // GET: Departments/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            return View("Index", BuildTree(id));
         }
 
         // GET: Departments/Create

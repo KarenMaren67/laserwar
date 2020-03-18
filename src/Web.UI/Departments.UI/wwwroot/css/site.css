@@ -137,7 +137,7 @@ a {
     .treeview a,
     .treeview a.sc,
     .treeview a.sc:hover {
-        color: #cc0000;
+        color: #fff;
     }
 
         .treeview a:hover {

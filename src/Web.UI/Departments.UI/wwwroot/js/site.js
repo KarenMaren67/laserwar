@@ -1,5 +1,5 @@
 ﻿function UnHide(eThis) {
-    if (eThis.innerHTML.charCodeAt(0) == 9658) {
+    if (eThis.innerHTML.charCodeAt(0) == 9658 || eThis.innerHTML.charCodeAt(0) == 10) {
         eThis.innerHTML = '&#9660;'
         eThis.parentNode.parentNode.parentNode.className = '';
     } else {
