@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Html
-@model IEnumerable<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel>
+@model Departments.UI.Models.MainViewModel
 
 @functions{
     private IHtmlContent DisplayItem(IEnumerable<Departments.UI.Models.Departments.DepartmentsTreeItemViewModel> departments)
@@ -17,7 +17,7 @@
                                 @(treeElement.ChildDepartments.Any(x => x.IsSelected) ? System.Net.WebUtility.HtmlEncode("\u25BC") : System.Net.WebUtility.HtmlEncode("\u25BA"))
                             </a>
 
-                            <a asp-action="Details" asp-route-id="@treeElement.Id">@treeElement.Name</a>
+                            <a id="@treeElement.Id">@treeElement.Name</a>
                         </p>
                     </div>
                     @DisplayItem(treeElement.ChildDepartments)
@@ -47,10 +47,12 @@
 }
 
 <div class="row">
-    <div class="treeview col-lg-2">
-        @DisplayItem(Model)
+    <div class="treeview col-lg-2 col-md-4 col-sm-4">
+        @DisplayItem(Model.TreeItems)
     </div>
 
-    <div class="col-lg-10"></div>
+    <div class="col-lg-10 col-md-8 col-sm-8">
+        @await Html.PartialAsync("../Departments/_DepartmentDetails.cshtml")
+    </div>
 </div>
 

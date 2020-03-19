@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Services;
 using Application.Validation.Department;
+using Departments.UI.Models;
 using Departments.UI.Models.Departments;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,8 @@ namespace Departments.UI.Controllers
         // GET: Departments
         public ActionResult Index()
         {
-            return View(BuildTree());
+            var model = new MainViewModel(BuildTree(), null);
+            return View(model);
         }
 
         private IEnumerable<DepartmentsTreeItemViewModel> BuildTree(int? selectedId = null)
@@ -74,7 +76,8 @@ namespace Departments.UI.Controllers
         // GET: Departments/Details/5
         public ActionResult Details(int id)
         {
-            return View("Index", BuildTree(id));
+            var model = new MainViewModel(BuildTree(id), null);
+            return View("Index", model);
         }
 
         // GET: Departments/Create

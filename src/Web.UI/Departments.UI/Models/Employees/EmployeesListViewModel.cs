@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Departments.UI.Models.Departments
+namespace Departments.UI.Models.Employees
 {
-    public class DepartmentDetailsViewModel
+    public class EmployeesListViewModel
     {
     }
 }

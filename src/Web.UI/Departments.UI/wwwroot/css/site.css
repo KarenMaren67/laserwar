@@ -99,7 +99,6 @@ a {
     .treeview a {
         padding: 0.1em 0.2em;
         white-space: nowrap;
-        //height: 1px;
     }
 
     .treeview img.i {
@@ -137,7 +136,7 @@ a {
     .treeview a,
     .treeview a.sc,
     .treeview a.sc:hover {
-        color: #fff;
+        color: #000;
     }
 
         .treeview a:hover {

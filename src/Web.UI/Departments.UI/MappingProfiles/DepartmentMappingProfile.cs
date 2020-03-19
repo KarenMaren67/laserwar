@@ -8,7 +8,7 @@ namespace Departments.UI.MappingProfiles
     {
         public DepartmentViewModelMappingProfile()
         {
-            CreateMap<DepartmentDetailsViewModel, Department>();
+            
         }
     }
 }
